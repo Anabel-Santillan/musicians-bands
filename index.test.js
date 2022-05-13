@@ -1,5 +1,6 @@
 const {sequelize} = require('./db');
-const {Band, Musician} = require('./index')
+const {Band, Musician} = require('./index');
+const { Song } = require('./Song');
 
 describe('Band and Musician Models', () => {
     /**
@@ -44,7 +45,30 @@ describe('Band and Musician Models', () => {
             expect(musicians[0] instanceof Musician).toBeTruthy
         }
     })
-    // test('Can add multiple musicians to a band',()=>{
+    test('Song creation test',()=>{
+        async() => {
+            const testSong = await Song.create({title: "Smells like Teen Spirit", year: 1991});
+            expect(testSong.title).toBe("Smells like Teen Spirit");
+            expect(testSong.year).toBe(1991)
+    }})
+
+     test('can add songs to bands',()=>{
+         async() => {
+            const testSong = await Song.create({title: "Smells like Teen Spirit", year: 1991});  
+            const testSong2 = await Song.create({title: "Heart-Shaped Box", year: 1993})   
+            const nirvanna = await Band.create({name: 'Nirvanna', genre: 'grunge'});
+            
+            await nirvanna.addSong('Smells like Teen Spirit');
+            await nirvanna.addSong('Heart-Shaped Box');
+
+            const nirvannaSongs = await nirvanna.getSongs();
+            expect(nirvannaSongs.length).toBe(2);
+            expect(nirvannaSongs[0]).toBeInstanceOf(Song);
+         }
+
+    })
+
+     // test('Can add multiple musicians to a band',()=>{
 
     // })
     
