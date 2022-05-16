@@ -68,8 +68,23 @@ describe('Band and Musician Models', () => {
 
     })
 
-     // test('Can add multiple musicians to a band',()=>{
+    test('bands can have many musicians', async() => {
+		const beatles = await Band.create({name : 'The Beatles'});
 
-    // })
-    
+		const ringo = await Musician.create({name: 'Ringo Starr', age : 66});
+		const paul = await Musician.create({name: 'Paul McCartney', age : 68});
+		const john = await Musician.create({name: 'John Lennon', age : 40});
+		const george = await Musician.create({name: 'George Harrison', age : 50});
+
+		await beatles.addMusician(ringo)
+		await beatles.addMusician(paul)
+		await beatles.addMusician(john)
+		await beatles.addMusician(george)
+
+		const musicians = await beatles.getMusicians()	
+		console.log("MEET THE BEATLES ", musicians)
+		expect(musicians.length).toBe(4)
+		expect(musicians[0] instanceof Musician).toBe(true)
+
+	})
 })
